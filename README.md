@@ -30,3 +30,12 @@ Este proyecto es una plataforma digital para la optimización de la visualizaci�
 
 ---
 
+## Estructura del proyecto
+
+- `/backend` - Lógica de negocio y APIs  
+- `/frontend` - Interfaz de usuario  
+- `/database` - Scripts de base de datos  
+- `/docs` - Documentación y diagramas
+
+---
+
