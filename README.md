@@ -32,10 +32,18 @@ Este proyecto es una plataforma digital para la optimizaci처n de la visualizaci�
 
 ## Estructura del proyecto
 
-- `/backend` - L처gica de negocio y APIs  
+- `/backend`  - L처gica de negocio y APIs  
 - `/frontend` - Interfaz de usuario  
 - `/database` - Scripts de base de datos  
-- `/docs` - Documentaci처n y diagramas
+- `/docs`     - Documentaci처n y diagramas
 
 ---
+
+## C처mo ejecutar
+
+1. Clonar el repositorio  
+2. Configurar la base de datos MySQL  
+3. Ejecutar backend (API REST)  
+4. Iniciar frontend en el navegador  
+5. Usar credenciales de administrador para login
 
