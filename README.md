@@ -9,3 +9,14 @@ Este proyecto es una plataforma digital para la optimización de la visualizaci�
 
 1. **Login Administrador**  
    - Acceso exclusivo para administradores con credenciales predefinidas.
+
+2. **Consulta de Envío para Clientes**  
+   - Los clientes pueden consultar la disponibilidad del servicio.  
+   - Visualización de reservas por día o por equipaje.  
+   - Visualización de los vehículos disponibles en la flota.
+
+3. **Gestión de Flota para Administración**  
+   - Mantenimiento programado de vehículos (CRUD).  
+   - Control de estado de vehículos: disponibles, en ruta o fuera de servicio (CRUD).
+
+---
