@@ -20,3 +20,13 @@ Este proyecto es una plataforma digital para la optimización de la visualizaci�
    - Control de estado de vehículos: disponibles, en ruta o fuera de servicio (CRUD).
 
 ---
+
+## Tecnologías usadas
+
+- Backend: APIs RESTful  
+- Base de datos: MySQL  
+- Arquitectura: SOA con ESB para orquestación de servicios  
+- Frontend: Diseño web orientado a UX (cliente y administrador)
+
+---
+
