@@ -69,7 +69,7 @@ public class EstadoVehiculoRepositoryImpl implements EstadoVehiculoRepository{
 	public List<EstadoVehiculo> obtenerEstadosVehiculo() {
 	    List<EstadoVehiculo> listaEstados = new ArrayList<>();
         try {
-            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("SP_LISTAR_ESTADOS_VEHICULO");
+            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("SP_LISTAR_ESTADOVEHICULO");
             query.execute();
             List<Object[]> results = query.getResultList();
             for (Object[] obj : results) {
