@@ -1,10 +1,14 @@
 package com.example.soa.projectZavala.controller;
 
+//import java.util.ArrayList;
+//import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
+import org.springframework.format.annotation.DateTimeFormat;
+//import org.springframework.http.HttpEntity;
 //import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,9 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.soa.projectZavala.entity.Administrador;
+import com.example.soa.projectZavala.entity.Consulta;
 import com.example.soa.projectZavala.entity.EstadoVehiculo;
 import com.example.soa.projectZavala.entity.Vehiculo;
 import com.example.soa.projectZavala.entity.mensaje.HttpResponseModel;
@@ -26,6 +32,7 @@ import com.example.soa.projectZavala.entity.mensaje.ResponseCte;
 import com.example.soa.projectZavala.entity.response.EstadoVehiculoResponse;
 import com.example.soa.projectZavala.entity.response.VehiculoResponse;
 import com.example.soa.projectZavala.service.AdministradorService;
+import com.example.soa.projectZavala.service.ConsultaService;
 import com.example.soa.projectZavala.service.EstadoVehiculoService;
 import com.example.soa.projectZavala.service.VehiculoService;
 
@@ -156,6 +163,23 @@ public class AdministradorController {
         }
 
         return ResponseEntity.ok(new HttpResponseModel(meta, resultado));
+    }
+    
+    @Autowired
+    private ConsultaService consultaService;
+
+    @GetMapping("/vehiculos-mantenimiento-previo")
+    public ResponseEntity<?> getVehiculosMantenimientoPrevio(
+            @RequestParam("fecha") @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date fecha,
+            @RequestParam("servicioId") int servicioId) {
+
+        List<Consulta> resultados = consultaService.obtenerVehiculosMantenimientoPrevio(new Date(fecha.getTime()), servicioId);
+
+        if (resultados.isEmpty()) {
+            return ResponseEntity.ok("No se encontraron vehículos con mantenimiento previo.");
+        }
+
+        return ResponseEntity.ok(resultados);
     }
     
 }

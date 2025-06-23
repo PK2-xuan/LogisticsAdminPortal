@@ -39,4 +39,5 @@ public class VehiculoService {
     public Vehiculo getById(int id) {
         return vehiculoRepository.obtenerVehiculoPorId(id);
     }
+   
 }

@@ -15,4 +15,5 @@ public interface VehiculoRepository {
     List<Vehiculo> obtenerVehiculos();
 
     Vehiculo obtenerVehiculoPorId(int id);
+
 }
