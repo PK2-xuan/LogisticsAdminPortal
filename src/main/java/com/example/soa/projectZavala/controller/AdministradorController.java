@@ -365,9 +365,28 @@ public class AdministradorController {
 	}
 
 	@PostMapping("/mantenimiento/programar-proximo")
-	public ResponseEntity<HttpResponseModel> programarProximo(@RequestParam int vehiculoId, @RequestParam int adminId) {
-		
-		return null;
+	public ResponseEntity<HttpResponseModel> programarProximo(
+	        @RequestParam(name = "vehiculoId") int vehiculoId,
+	        @RequestParam(name = "adminId") int adminId) {
+	    
+	    boolean resultado = mantenimientoService.programarProximoMantenimiento(vehiculoId, adminId);
+	    String idTransaccion = UUID.randomUUID().toString().toUpperCase();
+
+	    MensajeMeta mensaje;
+	    MetaModel meta;
+
+	    if (!resultado) {
+	        mensaje = new MensajeMeta(ResponseCte.ERROR_GENERAL.getCodigo(),
+	                "No se pudo programar el próximo mantenimiento", ResponseCte.ERROR_GENERAL.getTipo());
+	        meta = new MetaModel(mensaje, 0, idTransaccion, 0, false);
+	    } else {
+	        mensaje = new MensajeMeta(ResponseCte.OPERACION_CORRECTA.getCodigo(),
+	                "Próximo mantenimiento programado correctamente", ResponseCte.OPERACION_CORRECTA.getTipo());
+	        meta = new MetaModel(mensaje, 1, idTransaccion, 0, true);
+	    }
+
+	    return ResponseEntity.ok(new HttpResponseModel(meta, resultado));
 	}
+
 
 }

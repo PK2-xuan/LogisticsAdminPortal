@@ -20,5 +20,4 @@ public interface MantenimientoRepository {
 	List<Mantenimiento> obtenerMantenimientosPorVehiculoId(int vehiculoId);
 
 	String obtenerUltimaFechaMantenimiento(int vehiculoId);
-
 }

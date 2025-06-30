@@ -158,39 +158,52 @@ public class MantenimientoRepositoryImpl implements MantenimientoRepository {
 	@Override
 	public List<Mantenimiento> obtenerMantenimientosPorVehiculoId(int vehiculoId) {
 		List<Mantenimiento> lista = new ArrayList<>();
-	    try {
-	        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("SP_HISTORIAL_MANTENIMIENTOS_POR_VEHICULO");
-	        query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
-	        query.setParameter(1, vehiculoId);
-	        query.execute();
+		try {
+			StoredProcedureQuery query = entityManager
+					.createStoredProcedureQuery("SP_HISTORIAL_MANTENIMIENTOS_POR_VEHICULO");
+			query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
+			query.setParameter(1, vehiculoId);
+			query.execute();
 
-	        List<Object[]> results = query.getResultList();
-	        for (Object[] obj : results) {
-	            Mantenimiento m = new Mantenimiento();
-	            Vehiculo v = new Vehiculo();
-	            Administrador a = new Administrador();
+			List<Object[]> results = query.getResultList();
+			for (Object[] obj : results) {
+				Mantenimiento m = new Mantenimiento();
+				Vehiculo v = new Vehiculo();
+				Administrador a = new Administrador();
 
-	            m.setIdMantenimiento((Integer) obj[0]);
-	            v.setIdVehiculo((Integer) obj[1]);
-	            m.setFechaProgramada((String) obj[2]);
-	            m.setRealizado((String) obj[3]);
-	            m.setDescripcion((String) obj[4]);
-	            m.setEstado((String) obj[5]);
-	            a.setIdAdministrador((Integer) obj[6]);
+				m.setIdMantenimiento((Integer) obj[0]);
+				v.setIdVehiculo((Integer) obj[1]);
+				m.setFechaProgramada((String) obj[2]);
+				m.setRealizado((String) obj[3]);
+				m.setDescripcion((String) obj[4]);
+				m.setEstado((String) obj[5]);
+				a.setIdAdministrador((Integer) obj[6]);
 
-	            m.setVehiculo(v);
-	            m.setAdministrador(a);
-	            lista.add(m);
-	        }
-	    } catch (Exception e) {
-	        System.out.println("Error al obtener historial de mantenimientos: " + e.getMessage());
-	    }
-	    return lista;
+				m.setVehiculo(v);
+				m.setAdministrador(a);
+				lista.add(m);
+			}
+		} catch (Exception e) {
+			System.out.println("Error al obtener historial de mantenimientos: " + e.getMessage());
+		}
+		return lista;
 	}
 
 	@Override
 	public String obtenerUltimaFechaMantenimiento(int vehiculoId) {
+		try {
+			StoredProcedureQuery query = entityManager
+					.createStoredProcedureQuery("SP_OBTENER_ULTIMA_FECHA_MANTENIMIENTO");
+			query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN); // vehiculo_id
+			query.registerStoredProcedureParameter(2, String.class, ParameterMode.OUT); // fecha_ultima
 
-	    return null;
-	}	
+			query.setParameter(1, vehiculoId);
+			query.execute();
+
+			return (String) query.getOutputParameterValue(2);
+		} catch (Exception e) {
+			System.err.println("Error al obtener última fecha de mantenimiento: " + e.getMessage());
+			return null;
+		}
+	}
 }
