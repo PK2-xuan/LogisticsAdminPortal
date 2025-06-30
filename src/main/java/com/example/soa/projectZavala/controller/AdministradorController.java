@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 //import org.springframework.http.HttpEntity;
 //import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.soa.projectZavala.dto.LoginResponse;
 import com.example.soa.projectZavala.dto.MantenimientoDTO;
 import com.example.soa.projectZavala.entity.Administrador;
 import com.example.soa.projectZavala.entity.Consulta;
@@ -49,10 +51,14 @@ public class AdministradorController {
 	private AdministradorService administradorService;
 
 	@PostMapping("/login")
-	public ResponseEntity<String> logeoYObtieneNombre(@RequestBody Administrador administrador) {
-		String mensaje = administradorService.logeoYObtieneNombre(administrador.getCorreo(),
-				administrador.getContraseña());
-		return ResponseEntity.ok(mensaje);
+	public ResponseEntity<?> logeoYObtieneDatos(@RequestBody Administrador administrador) {
+	    LoginResponse response = administradorService.logeo(administrador.getCorreo(), administrador.getContraseña());
+
+	    if (response != null) {
+	        return ResponseEntity.ok(response); // devolverá id + nombre
+	    } else {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
+	    }
 	}
 
 	// CONTROLLER ESTADO VEHICULO
