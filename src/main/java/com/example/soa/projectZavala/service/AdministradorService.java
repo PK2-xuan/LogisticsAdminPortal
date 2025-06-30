@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.soa.projectZavala.dto.LoginResponse;
 //import com.example.soa.projectZavala.entity.Administrador;
 //import com.example.soa.projectZavala.entity.response.AdministradorResponse;
 import com.example.soa.projectZavala.repository.AdministradorRepository;
@@ -14,14 +15,9 @@ import com.example.soa.projectZavala.repository.AdministradorRepository;
 public class AdministradorService {
 
 	@Autowired
-    private AdministradorRepository administradorRepository;
-  
-    public String logeoYObtieneNombre(String correo, String contraseña) {
-        String nombre = administradorRepository.obtenerNombreSiCredencialesSonValidas(correo, contraseña);
-        return (nombre != null) ? "Bienvenido, " + nombre : "Credenciales incorrectas";
-    }
+	private AdministradorRepository administradorRepository;
+
+	public LoginResponse logeo(String correo, String contraseña) {
+		return administradorRepository.obtenerAdminPorCredenciales(correo, contraseña);
+	}
 }
-
-
-
-
