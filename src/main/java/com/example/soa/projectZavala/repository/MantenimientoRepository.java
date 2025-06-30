@@ -14,4 +14,11 @@ public interface MantenimientoRepository {
     List<Mantenimiento> obtenerMantenimientos();
 
     Mantenimiento obtenerMantenimientoPorId(int id);	
+    
+    // SERVICIOS
+
+	List<Mantenimiento> obtenerMantenimientosPorVehiculoId(int vehiculoId);
+
+	String obtenerUltimaFechaMantenimiento(int vehiculoId);
+
 }
