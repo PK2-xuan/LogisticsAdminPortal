@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.soa.projectZavala.entity.Mantenimiento;
 import com.example.soa.projectZavala.entity.response.MantenimientoResponse;
+import com.example.soa.projectZavala.entity.response.MantenimientoResponseDTO;
 import com.example.soa.projectZavala.repository.MantenimientoRepository;
 
 @Service
@@ -39,4 +40,19 @@ public class MantenimientoService {
 	public Mantenimiento getById(int id) {
 		return mantenimientoRepository.obtenerMantenimientoPorId(id);
 	}
+	
+	public List<MantenimientoResponseDTO> mapToDtoList(List<Mantenimiento> lista) {
+	    return lista.stream().map(m -> {
+	        MantenimientoResponseDTO dto = new MantenimientoResponseDTO();
+	        dto.setIdMantenimiento(m.getIdMantenimiento());
+	        dto.setVehiculoId(m.getVehiculo().getIdVehiculo());
+	        dto.setFechaProgramada(m.getFechaProgramada());
+	        dto.setRealizado(m.getRealizado());
+	        dto.setDescripcion(m.getDescripcion());
+	        dto.setEstado(m.getEstado());
+	        dto.setAdministradorId(m.getAdministrador().getIdAdministrador());
+	        return dto;
+	    }).toList();
+	}
+
 }

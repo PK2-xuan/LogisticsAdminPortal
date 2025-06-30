@@ -1,5 +1,7 @@
 package com.example.soa.projectZavala.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -11,9 +13,10 @@ public class Mantenimiento {
     @Column(name = "id_mantenimiento")
     private Integer idMantenimiento;
 
-    @ManyToOne
-    @JoinColumn(name = "vehiculo_id", nullable = false)
-    private Vehiculo vehiculo;
+	@JsonIgnoreProperties({"placa", "modelo", "marca", "capacidadEquipaje", "estado"})
+	@ManyToOne
+	@JoinColumn(name = "vehiculo_id", nullable = false)
+	private Vehiculo vehiculo;
 
     @Column(name = "fecha_programada", nullable = false, length = 50)
     private String fechaProgramada;
@@ -27,6 +30,7 @@ public class Mantenimiento {
     @Column(nullable = false, length = 50)
     private String estado;
 
+    @JsonIgnoreProperties({"nombre", "correo", "contraseña"})
     @ManyToOne
     @JoinColumn(name = "administrador_id", nullable = false)
     private Administrador administrador;
