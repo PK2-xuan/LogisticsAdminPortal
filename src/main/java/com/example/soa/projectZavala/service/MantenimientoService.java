@@ -64,33 +64,8 @@ public class MantenimientoService {
 	}
 
 	public boolean programarProximoMantenimiento(int vehiculoId, int adminId) {
-		String ultimaFechaStr = mantenimientoRepository.obtenerUltimaFechaMantenimiento(vehiculoId);
 
-		if (ultimaFechaStr == null || ultimaFechaStr.isEmpty())
-			return false;
-
-		try {
-			LocalDate ultimaFecha = LocalDate.parse(ultimaFechaStr);
-			LocalDate proximaFecha = ultimaFecha.plusMonths(1);
-
-			Mantenimiento nuevo = new Mantenimiento();
-			Vehiculo v = new Vehiculo();
-			v.setIdVehiculo(vehiculoId);
-			Administrador a = new Administrador();
-			a.setIdAdministrador(adminId);
-
-			nuevo.setVehiculo(v);
-			nuevo.setAdministrador(a);
-			nuevo.setFechaProgramada(proximaFecha.toString());
-			nuevo.setRealizado("NO");
-			nuevo.setDescripcion("Mantenimiento programado automáticamente");
-			nuevo.setEstado("Programado");
-
-			return mantenimientoRepository.insertarMantenimiento(nuevo);
-		} catch (Exception e) {
-			System.out.println("Error al programar próximo mantenimiento: " + e.getMessage());
-			return false;
-		}
+	    return null;
 	}
 
 }

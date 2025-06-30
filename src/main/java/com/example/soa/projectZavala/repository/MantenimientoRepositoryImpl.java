@@ -190,16 +190,7 @@ public class MantenimientoRepositoryImpl implements MantenimientoRepository {
 
 	@Override
 	public String obtenerUltimaFechaMantenimiento(int vehiculoId) {
-	    try {
-	        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("SP_OBTENER_ULTIMA_FECHA_MANTENIMIENTO");
-	        query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
-	        query.registerStoredProcedureParameter(2, String.class, ParameterMode.OUT);
-	        query.setParameter(1, vehiculoId);
-	        query.execute();
-	        return (String) query.getOutputParameterValue(2);
-	    } catch (Exception e) {
-	        System.out.println("Error al obtener última fecha de mantenimiento: " + e.getMessage());
-	    }
+
 	    return null;
 	}	
 }
