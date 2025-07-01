@@ -1,13 +1,9 @@
 package com.example.soa.projectZavala.controller;
 
-//import java.util.ArrayList;
-//import java.util.Date;
-import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 //import org.springframework.http.HttpEntity;
 //import org.springframework.http.HttpStatusCode;
@@ -19,13 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.soa.projectZavala.dto.LoginResponse;
 import com.example.soa.projectZavala.dto.MantenimientoDTO;
 import com.example.soa.projectZavala.entity.Administrador;
-import com.example.soa.projectZavala.entity.Consulta;
 import com.example.soa.projectZavala.entity.EstadoVehiculo;
 import com.example.soa.projectZavala.entity.Mantenimiento;
 import com.example.soa.projectZavala.entity.Vehiculo;
@@ -37,7 +31,6 @@ import com.example.soa.projectZavala.entity.response.EstadoVehiculoResponse;
 import com.example.soa.projectZavala.entity.response.MantenimientoResponse;
 import com.example.soa.projectZavala.entity.response.VehiculoResponse;
 import com.example.soa.projectZavala.service.AdministradorService;
-import com.example.soa.projectZavala.service.ConsultaService;
 import com.example.soa.projectZavala.service.EstadoVehiculoService;
 import com.example.soa.projectZavala.service.MantenimientoService;
 import com.example.soa.projectZavala.service.VehiculoService;
@@ -52,13 +45,13 @@ public class AdministradorController {
 
 	@PostMapping("/login")
 	public ResponseEntity<?> logeoYObtieneDatos(@RequestBody Administrador administrador) {
-	    LoginResponse response = administradorService.logeo(administrador.getCorreo(), administrador.getContraseña());
+		LoginResponse response = administradorService.logeo(administrador.getCorreo(), administrador.getContraseña());
 
-	    if (response != null) {
-	        return ResponseEntity.ok(response); // devolverá id + nombre
-	    } else {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
-	    }
+		if (response != null) {
+			return ResponseEntity.ok(response); // devolverá id + nombre
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
+		}
 	}
 
 	// CONTROLLER ESTADO VEHICULO
@@ -185,27 +178,7 @@ public class AdministradorController {
 		return ResponseEntity.ok(new HttpResponseModel(meta, resultado));
 	}
 
-	// CONTROLLER CONSULTA
-	@Autowired
-	private ConsultaService consultaService;
-
-	@GetMapping("/vehiculos-mantenimiento-previo")
-	public ResponseEntity<?> getVehiculosMantenimientoPrevio(
-			@RequestParam("fecha") @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date fecha,
-			@RequestParam("servicioId") int servicioId) {
-
-		List<Consulta> resultados = consultaService.obtenerVehiculosMantenimientoPrevio(new Date(fecha.getTime()),
-				servicioId);
-
-		if (resultados.isEmpty()) {
-			return ResponseEntity.ok("No se encontraron vehículos con mantenimiento previo.");
-		}
-
-		return ResponseEntity.ok(resultados);
-	}
-
 	// CONTROLLER MANTENIMIENTO
-
 	@Autowired
 	private MantenimientoService mantenimientoService;
 
@@ -347,52 +320,5 @@ public class AdministradorController {
 
 		return ResponseEntity.ok(new HttpResponseModel(meta, resultado));
 	}
-
-	// SERVICIOS DE MANTENIMIENTO
-	@GetMapping("/mantenimiento/historial/{vehiculoId}")
-	public ResponseEntity<HttpResponseModel> obtenerHistorialPorVehiculo(@PathVariable("vehiculoId") int vehiculoId) {
-		List<Mantenimiento> lista = mantenimientoService.getHistorialPorVehiculo(vehiculoId);
-		String idTransaccion = UUID.randomUUID().toString().toUpperCase();
-
-		MensajeMeta mensaje;
-		MetaModel meta;
-
-		if (lista == null || lista.isEmpty()) {
-			mensaje = new MensajeMeta(ResponseCte.ERROR_GENERAL.getCodigo(), "No hay historial para el vehículo.",
-					ResponseCte.ERROR_GENERAL.getTipo());
-			meta = new MetaModel(mensaje, 0, idTransaccion, 0, false);
-		} else {
-			mensaje = new MensajeMeta(ResponseCte.OPERACION_CORRECTA.getCodigo(), "Historial obtenido correctamente.",
-					ResponseCte.OPERACION_CORRECTA.getTipo());
-			meta = new MetaModel(mensaje, lista.size(), idTransaccion, 0, true);
-		}
-
-		return ResponseEntity.ok(new HttpResponseModel(meta, lista));
-	}
-
-	@PostMapping("/mantenimiento/programar-proximo")
-	public ResponseEntity<HttpResponseModel> programarProximo(
-	        @RequestParam(name = "vehiculoId") int vehiculoId,
-	        @RequestParam(name = "adminId") int adminId) {
-	    
-	    boolean resultado = mantenimientoService.programarProximoMantenimiento(vehiculoId, adminId);
-	    String idTransaccion = UUID.randomUUID().toString().toUpperCase();
-
-	    MensajeMeta mensaje;
-	    MetaModel meta;
-
-	    if (!resultado) {
-	        mensaje = new MensajeMeta(ResponseCte.ERROR_GENERAL.getCodigo(),
-	                "No se pudo programar el próximo mantenimiento", ResponseCte.ERROR_GENERAL.getTipo());
-	        meta = new MetaModel(mensaje, 0, idTransaccion, 0, false);
-	    } else {
-	        mensaje = new MensajeMeta(ResponseCte.OPERACION_CORRECTA.getCodigo(),
-	                "Próximo mantenimiento programado correctamente", ResponseCte.OPERACION_CORRECTA.getTipo());
-	        meta = new MetaModel(mensaje, 1, idTransaccion, 0, true);
-	    }
-
-	    return ResponseEntity.ok(new HttpResponseModel(meta, resultado));
-	}
-
 
 }
