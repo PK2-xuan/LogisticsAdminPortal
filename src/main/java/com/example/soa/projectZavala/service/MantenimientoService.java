@@ -73,7 +73,7 @@ public class MantenimientoService {
 
 		try {
 			LocalDate ultimaFecha = LocalDate.parse(ultimaFechaStr);
-			LocalDate proximaFecha = ultimaFecha.plusMonths(1); // ← puedes ajustar a 6 si quieres
+			LocalDate proximaFecha = ultimaFecha.plusMonths(1); // ← puedes ajustar a 1 si quieres
 
 			Mantenimiento nuevo = new Mantenimiento();
 			Vehiculo v = new Vehiculo();

@@ -31,7 +31,7 @@ public class ServiceController {
 	@Autowired
 	private ConsultaService consultaService;
 
-	@GetMapping("/vehiculos-mantenimiento-previo")
+	@GetMapping("/ConsultaServicios")
 	public ResponseEntity<?> getVehiculosMantenimientoPrevio(
 			@RequestParam("fecha") @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date fecha,
 			@RequestParam("servicioId") int servicioId) {
