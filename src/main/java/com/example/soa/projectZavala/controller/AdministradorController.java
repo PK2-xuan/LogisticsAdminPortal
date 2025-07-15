@@ -58,12 +58,113 @@ public class AdministradorController {
 	@Autowired
 	private EstadoVehiculoService estadoVehiculoService;
 
-	// Listar
-	@GetMapping("/listar")
-	public ResponseEntity<List<EstadoVehiculo>> listarEstados() {
-		EstadoVehiculoResponse response = estadoVehiculoService.getList();
-		return ResponseEntity.ok(response.getListaEstadosVehiculo());
-	}
+	@GetMapping("/estado-vehiculo/listar")
+    public ResponseEntity<HttpResponseModel> listarEstados() {
+        EstadoVehiculoResponse response = estadoVehiculoService.getList();
+        List<EstadoVehiculo> lista = response.getListaEstadosVehiculo();
+
+        String idTransaccion = UUID.randomUUID().toString().toUpperCase();
+        MensajeMeta mensaje;
+        MetaModel meta;
+
+        if (lista == null || lista.isEmpty()) {
+            mensaje = new MensajeMeta(ResponseCte.ERROR_GENERAL.getCodigo(), "No se encontraron estados de vehículo.",
+                    ResponseCte.ERROR_GENERAL.getTipo());
+            meta = new MetaModel(mensaje, 0, idTransaccion, 0, false);
+        } else {
+            mensaje = new MensajeMeta(ResponseCte.OPERACION_CORRECTA.getCodigo(),
+                    "Estados de vehículo obtenidos correctamente.", ResponseCte.OPERACION_CORRECTA.getTipo());
+            meta = new MetaModel(mensaje, lista.size(), idTransaccion, 0, true);
+        }
+
+        return ResponseEntity.ok(new HttpResponseModel(meta, response));
+    }
+
+    @GetMapping("/estado-vehiculo/listar/{id}")
+    public ResponseEntity<HttpResponseModel> obtenerEstadoPorId(@PathVariable("id") int id) {
+        EstadoVehiculo estado = estadoVehiculoService.getById(id);
+        String idTransaccion = UUID.randomUUID().toString().toUpperCase();
+
+        MensajeMeta mensaje;
+        MetaModel meta;
+
+        if (estado == null || estado.getIdEstado() == null) {
+            mensaje = new MensajeMeta(ResponseCte.ERROR_GENERAL.getCodigo(), "Estado de vehículo no encontrado",
+                    ResponseCte.ERROR_GENERAL.getTipo());
+            meta = new MetaModel(mensaje, 0, idTransaccion, 0, false);
+        } else {
+            mensaje = new MensajeMeta(ResponseCte.OPERACION_CORRECTA.getCodigo(), "Estado de vehículo encontrado",
+                    ResponseCte.OPERACION_CORRECTA.getTipo());
+            meta = new MetaModel(mensaje, 1, idTransaccion, 0, true);
+        }
+
+        return ResponseEntity.ok(new HttpResponseModel(meta, estado));
+    }
+
+    @PostMapping("/estado-vehiculo/insertar")
+    public ResponseEntity<HttpResponseModel> insertarEstado(@RequestBody EstadoVehiculo estado) {
+        boolean resultado = estadoVehiculoService.insert(estado);
+        String idTransaccion = UUID.randomUUID().toString().toUpperCase();
+
+        MensajeMeta mensaje;
+        MetaModel meta;
+
+        if (!resultado) {
+            mensaje = new MensajeMeta(ResponseCte.ERROR_GENERAL.getCodigo(), "Error al insertar estado de vehículo",
+                    ResponseCte.ERROR_GENERAL.getTipo());
+            meta = new MetaModel(mensaje, 0, idTransaccion, 0, false);
+        } else {
+            mensaje = new MensajeMeta(ResponseCte.OPERACION_CORRECTA.getCodigo(),
+                    "Estado de vehículo insertado correctamente", ResponseCte.OPERACION_CORRECTA.getTipo());
+            meta = new MetaModel(mensaje, 1, idTransaccion, 0, true);
+        }
+
+        return ResponseEntity.ok(new HttpResponseModel(meta, resultado));
+    }
+
+    @PutMapping("/estado-vehiculo/actualizar/{id}")
+    public ResponseEntity<HttpResponseModel> actualizarEstado(@PathVariable("id") int id,
+            @RequestBody EstadoVehiculo estado) {
+        boolean resultado = estadoVehiculoService.update(estado, id);
+        String idTransaccion = UUID.randomUUID().toString().toUpperCase();
+
+        MensajeMeta mensaje;
+        MetaModel meta;
+
+        if (!resultado) {
+            mensaje = new MensajeMeta(ResponseCte.ERROR_GENERAL.getCodigo(), "Error al actualizar estado de vehículo",
+                    ResponseCte.ERROR_GENERAL.getTipo());
+            meta = new MetaModel(mensaje, 0, idTransaccion, 0, false);
+        } else {
+            mensaje = new MensajeMeta(ResponseCte.OPERACION_CORRECTA.getCodigo(),
+                    "Estado de vehículo actualizado correctamente", ResponseCte.OPERACION_CORRECTA.getTipo());
+            meta = new MetaModel(mensaje, 1, idTransaccion, 0, true);
+        }
+
+        return ResponseEntity.ok(new HttpResponseModel(meta, resultado));
+    }
+
+    @DeleteMapping("/estado-vehiculo/eliminar/{id}")
+    public ResponseEntity<HttpResponseModel> eliminarEstado(@PathVariable("id") int id) {
+        boolean resultado = estadoVehiculoService.delete(id);
+        String idTransaccion = UUID.randomUUID().toString().toUpperCase();
+
+        MensajeMeta mensaje;
+        MetaModel meta;
+
+        if (!resultado) {
+            mensaje = new MensajeMeta(ResponseCte.ERROR_GENERAL.getCodigo(), "Error al eliminar estado de vehículo",
+                    ResponseCte.ERROR_GENERAL.getTipo());
+            meta = new MetaModel(mensaje, 0, idTransaccion, 0, false);
+        } else {
+            mensaje = new MensajeMeta(ResponseCte.OPERACION_CORRECTA.getCodigo(),
+                    "Estado de vehículo eliminado correctamente", ResponseCte.OPERACION_CORRECTA.getTipo());
+            meta = new MetaModel(mensaje, 1, idTransaccion, 0, true);
+        }
+
+        return ResponseEntity.ok(new HttpResponseModel(meta, resultado));
+    }
+
 
 	// CONTROLLER VEHICULO
 	@Autowired
@@ -320,5 +421,7 @@ public class AdministradorController {
 
 		return ResponseEntity.ok(new HttpResponseModel(meta, resultado));
 	}
+
+
 
 }

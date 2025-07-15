@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.soa.projectZavala.dto.ReporteUtilizacionDTO;
 import com.example.soa.projectZavala.entity.Consulta;
 import com.example.soa.projectZavala.entity.Mantenimiento;
 import com.example.soa.projectZavala.entity.mensaje.HttpResponseModel;
@@ -21,6 +22,7 @@ import com.example.soa.projectZavala.entity.mensaje.MensajeMeta;
 import com.example.soa.projectZavala.entity.mensaje.MetaModel;
 import com.example.soa.projectZavala.entity.mensaje.ResponseCte;
 import com.example.soa.projectZavala.service.ConsultaService;
+import com.example.soa.projectZavala.service.EstadoVehiculoService;
 import com.example.soa.projectZavala.service.MantenimientoService;
 
 @RestController
@@ -93,4 +95,57 @@ public class ServiceController {
 
 		return ResponseEntity.ok(new HttpResponseModel(meta, resultado));
 	}
+
+	// SERVICIOS DE ESTADO DE VEHICULO
+	@Autowired
+	private EstadoVehiculoService estadoVehiculoService;
+
+	@GetMapping("/estado-vehiculo/reporte-utilizacion-vehiculos")
+	public ResponseEntity<HttpResponseModel> obtenerReporteUtilizacionVehiculos() {
+		List<ReporteUtilizacionDTO> lista = estadoVehiculoService.obtenerReporteUtilizacionVehiculos();
+		String idTransaccion = UUID.randomUUID().toString().toUpperCase();
+
+		MensajeMeta mensaje;
+		MetaModel meta;
+
+		if (lista == null || lista.isEmpty()) {
+			mensaje = new MensajeMeta(ResponseCte.ERROR_GENERAL.getCodigo(),
+					"No se encontraron datos para el reporte de utilización", ResponseCte.ERROR_GENERAL.getTipo());
+			meta = new MetaModel(mensaje, 0, idTransaccion, 0, false);
+		} else {
+			mensaje = new MensajeMeta(ResponseCte.OPERACION_CORRECTA.getCodigo(),
+					"Reporte de utilización obtenido correctamente", ResponseCte.OPERACION_CORRECTA.getTipo());
+			meta = new MetaModel(mensaje, lista.size(), idTransaccion, 0, true);
+		}
+
+		return ResponseEntity.ok(new HttpResponseModel(meta, lista));
+	}
+
+	@PostMapping("/estado-vehiculo/actualizar-estado-mantenimiento")
+	public ResponseEntity<HttpResponseModel> actualizarEstadoPorMantenimiento() {
+	    String idTransaccion = UUID.randomUUID().toString().toUpperCase();
+
+	    MensajeMeta mensaje;
+	    MetaModel meta;
+
+	    try {
+	        estadoVehiculoService.actualizarEstadoPorMantenimiento();
+
+			mensaje = new MensajeMeta(ResponseCte.OPERACION_CORRECTA.getCodigo(),
+	                "Estados de vehículos actualizados correctamente.",
+	                ResponseCte.OPERACION_CORRECTA.getTipo()
+	        );
+	        meta = new MetaModel(mensaje, 1, idTransaccion, 0, true);
+	        return ResponseEntity.ok(new HttpResponseModel(meta, true));
+	    } catch (Exception e) {
+	        mensaje = new MensajeMeta(
+	                ResponseCte.ERROR_GENERAL.getCodigo(),
+	                "Error al actualizar estados de vehículos: " + e.getMessage(),
+	                ResponseCte.ERROR_GENERAL.getTipo()
+	        );
+	        meta = new MetaModel(mensaje, 0, idTransaccion, 0, false);
+	        return ResponseEntity.status(500).body(new HttpResponseModel(meta, false));
+	    }
+	}
+
 }

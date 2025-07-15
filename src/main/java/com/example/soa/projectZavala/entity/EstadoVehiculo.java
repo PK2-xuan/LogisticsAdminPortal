@@ -2,7 +2,6 @@ package com.example.soa.projectZavala.entity;
 
 import jakarta.persistence.*;
 
-
 @Entity
 @Table(name = "EstadoVehiculo")
 public class EstadoVehiculo {
@@ -12,20 +11,28 @@ public class EstadoVehiculo {
     @Column(name = "id_estado")
     private Integer idEstado;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "nombre")
+    private String nombre;
+
+    @Column(name = "descripcion", nullable = false, length = 100)
     private String descripcion;
 
-    // Constructor vacío
-    public EstadoVehiculo() {
-    }
-
     // Getters y Setters
+
     public Integer getIdEstado() {
         return idEstado;
     }
 
     public void setIdEstado(Integer idEstado) {
         this.idEstado = idEstado;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getDescripcion() {

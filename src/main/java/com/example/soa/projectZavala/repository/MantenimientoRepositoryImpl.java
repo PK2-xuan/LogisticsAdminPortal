@@ -137,7 +137,7 @@ public class MantenimientoRepositoryImpl implements MantenimientoRepository {
 				Vehiculo v = new Vehiculo();
 				Administrador a = new Administrador();
 
-				m.setIdMantenimiento((Integer) obj[0]);
+				m.setIdMantenimiento((Integer)  obj[0]);
 				v.setIdVehiculo((Integer) obj[1]);
 				m.setFechaProgramada((String) obj[2]);
 				m.setRealizado((String) obj[3]);
